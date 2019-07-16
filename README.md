@@ -10,13 +10,13 @@
 
 > https://github.com/yhaolpz/FloatWindow
 
-在Floatwindow项目上面，修改，更新日志：
+修复以下问题：
 
 1. 修复 Android O 以上的系统没有显示悬浮窗
 
 2. 销毁的时候，关闭广播`registerActivityLifecycleCallbacks`
 
-3. 升级gradle和引用库版本
+3. 升级gradle和引用库版本，修改最低版本
 
 4. 新增悬浮窗口拖动的范围在屏幕内
 
@@ -187,12 +187,6 @@ setMoveStyle 方法可设置动画效果，只在 MoveType.slide 或 MoveType.ba
 ===
 
 点击查看 : [示例代码](https://github.com/yhaolpz/FloatWindow/blob/master/sample/src/main/java/com/example/yhao/floatwindow/BaseApplication.java) 。
-
-最后：
---
-![悬浮按钮图](https://raw.githubusercontent.com/yhaolpz/FixedFloatWindow/master/pay.jpg)
-
-本人已尽量去兼容更多机型，但经济有限，如果你想帮助此库，提 Issues 标出当前版本不适配的机型即可，感谢~
 
 
 **更新日志**
