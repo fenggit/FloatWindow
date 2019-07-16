@@ -232,12 +232,12 @@ public class IFloatWindowImpl extends IFloatWindow {
                                 upY = event.getRawY();
                                 mClick = (Math.abs(upX - downX) > mSlop) || (Math.abs(upY - downY) > mSlop);
                                 onActionUp(v);
-                                break;
+                                return mClick;
+
                             default:
                                 break;
                         }
-                        Log.e("hefeng", "mClick:" + mClick);
-                        return mClick;
+                        return false;
                     }
                 });
         }
