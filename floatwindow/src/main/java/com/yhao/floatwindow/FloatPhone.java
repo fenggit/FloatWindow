@@ -57,7 +57,7 @@ class FloatPhone extends FloatView {
     public void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             req();
-        } else if (Miui.rom()) {
+        } else if (Miui.rom() || Rom.isOppo()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 req();
             } else {

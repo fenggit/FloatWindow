@@ -3,6 +3,7 @@ package com.yhao.floatwindow;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +15,13 @@ import java.io.InputStreamReader;
  */
 
 class Rom {
+    public static final String ROM_OPPO = "OPPO";
+    private static final String KEY_VERSION_VIVO = "ro.vivo.os.version";
+
+    static boolean isOppo() {
+        LogUtil.d(" oppo  : " + getProp(KEY_VERSION_VIVO));
+        return Build.MANUFACTURER.equalsIgnoreCase(ROM_OPPO);
+    }
 
     static boolean isIntentAvailable(Intent intent, Context context) {
         return intent != null && context.getPackageManager().queryIntentActivities(
