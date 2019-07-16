@@ -8,6 +8,7 @@ import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -19,8 +20,6 @@ import android.view.animation.DecelerateInterpolator;
  */
 
 public class IFloatWindowImpl extends IFloatWindow {
-
-
     private FloatWindow.B mB;
     private FloatView mFloatView;
     private FloatLifecycle mFloatLifecycle;
@@ -34,14 +33,19 @@ public class IFloatWindowImpl extends IFloatWindow {
     private float upY;
     private boolean mClick = false;
     private int mSlop;
-
+    private int statusBarHeight = 0;
+    private int screenHeight = 0;
+    private int screenWidth = 0;
 
     private IFloatWindowImpl() {
-
     }
 
     IFloatWindowImpl(FloatWindow.B b) {
         mB = b;
+        statusBarHeight = Util.getStatusBarHeight(mB.mApplicationContext);
+        screenHeight = Util.getScreenHeight(mB.mApplicationContext);
+        screenWidth = Util.getScreenWidth(mB.mApplicationContext);
+
         if (mB.mMoveType == MoveType.fixed) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                 mFloatView = new FloatPhone(b.mApplicationContext, mB.mPermissionListener);
@@ -207,6 +211,14 @@ public class IFloatWindowImpl extends IFloatWindow {
                                 changeY = event.getRawY() - lastY;
                                 newX = (int) (mFloatView.getX() + changeX);
                                 newY = (int) (mFloatView.getY() + changeY);
+
+                                // xy坐标不是从屏幕顶部开始，而是从状态栏下面开始，0，0
+                                if (newY < 0) {
+                                    newY = 0;
+                                } else if (newY > screenHeight - v.getHeight() - statusBarHeight) {
+                                    newY = screenHeight - v.getHeight() - statusBarHeight;
+                                }
+
                                 mFloatView.updateXY(newX, newY);
                                 if (mB.mViewStateListener != null) {
                                     mB.mViewStateListener.onPositionUpdate(newX, newY);
@@ -214,59 +226,89 @@ public class IFloatWindowImpl extends IFloatWindow {
                                 lastX = event.getRawX();
                                 lastY = event.getRawY();
                                 break;
+
                             case MotionEvent.ACTION_UP:
                                 upX = event.getRawX();
                                 upY = event.getRawY();
                                 mClick = (Math.abs(upX - downX) > mSlop) || (Math.abs(upY - downY) > mSlop);
-                                switch (mB.mMoveType) {
-                                    case MoveType.slide:
-                                        int startX = mFloatView.getX();
-                                        int endX = (startX * 2 + v.getWidth() > Util.getScreenWidth(mB.mApplicationContext)) ?
-                                                Util.getScreenWidth(mB.mApplicationContext) - v.getWidth() - mB.mSlideRightMargin :
-                                                mB.mSlideLeftMargin;
-                                        mAnimator = ObjectAnimator.ofInt(startX, endX);
-                                        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                            @Override
-                                            public void onAnimationUpdate(ValueAnimator animation) {
-                                                int x = (int) animation.getAnimatedValue();
-                                                mFloatView.updateX(x);
-                                                if (mB.mViewStateListener != null) {
-                                                    mB.mViewStateListener.onPositionUpdate(x, (int) upY);
-                                                }
-                                            }
-                                        });
-                                        startAnimator();
-                                        break;
-                                    case MoveType.back:
-                                        PropertyValuesHolder pvhX = PropertyValuesHolder.ofInt("x", mFloatView.getX(), mB.xOffset);
-                                        PropertyValuesHolder pvhY = PropertyValuesHolder.ofInt("y", mFloatView.getY(), mB.yOffset);
-                                        mAnimator = ObjectAnimator.ofPropertyValuesHolder(pvhX, pvhY);
-                                        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                            @Override
-                                            public void onAnimationUpdate(ValueAnimator animation) {
-                                                int x = (int) animation.getAnimatedValue("x");
-                                                int y = (int) animation.getAnimatedValue("y");
-                                                mFloatView.updateXY(x, y);
-                                                if (mB.mViewStateListener != null) {
-                                                    mB.mViewStateListener.onPositionUpdate(x, y);
-                                                }
-                                            }
-                                        });
-                                        startAnimator();
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                onActionUp(v);
                                 break;
                             default:
                                 break;
                         }
+                        Log.e("hefeng", "mClick:" + mClick);
                         return mClick;
                     }
                 });
         }
     }
 
+    private void onActionUp(View v) {
+        switch (mB.mMoveType) {
+            case MoveType.slide:
+                int startX = mFloatView.getX();
+
+                int endX = (startX * 2 + v.getWidth() > screenWidth) ? screenWidth - v.getWidth() - mB.mSlideRightMargin : mB.mSlideLeftMargin;
+
+                mAnimator = ObjectAnimator.ofInt(startX, endX);
+                mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int x = (int) animation.getAnimatedValue();
+                        mFloatView.updateX(x);
+                        if (mB.mViewStateListener != null) {
+                            mB.mViewStateListener.onPositionUpdate(x, (int) upY);
+                        }
+                    }
+                });
+                startAnimator();
+
+                /*int[] a = new int[2];
+                mB.mView.getLocationOnScreen(a);
+                int startX = a[0];
+                int endX;
+                if (isLandscape) {
+                    endX = a[0] + mB.mWidth / 2 < screenHeight / 2 ? mB.mSlideLeftMargin : screenHeight + mB.mSlideRightMargin;
+                } else {
+                    endX = a[0] + mB.mWidth / 2 < screenWidth / 2 ? mB.mSlideLeftMargin : screenWidth + mB.mSlideRightMargin;
+                }
+                if (startX == endX) {
+                    return;
+                }
+                mAnimator = ObjectAnimator.ofInt(startX, endX);
+                mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int x = (int) animation.getAnimatedValue();
+                        mFloatView.updateX(x);
+                        if (mB.mViewStateListener != null) {
+                            mB.mViewStateListener.onPositionUpdate(x, (int) upY);
+                        }
+                    }
+                });
+                startAnimator();*/
+                break;
+            case MoveType.back:
+                PropertyValuesHolder pvhX = PropertyValuesHolder.ofInt("x", mFloatView.getX(), mB.xOffset);
+                PropertyValuesHolder pvhY = PropertyValuesHolder.ofInt("y", mFloatView.getY(), mB.yOffset);
+                mAnimator = ObjectAnimator.ofPropertyValuesHolder(pvhX, pvhY);
+                mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int x = (int) animation.getAnimatedValue("x");
+                        int y = (int) animation.getAnimatedValue("y");
+                        mFloatView.updateXY(x, y);
+                        if (mB.mViewStateListener != null) {
+                            mB.mViewStateListener.onPositionUpdate(x, y);
+                        }
+                    }
+                });
+                startAnimator();
+                break;
+            default:
+                break;
+        }
+    }
 
     private void startAnimator() {
         if (mB.mInterpolator == null) {
@@ -299,4 +341,9 @@ public class IFloatWindowImpl extends IFloatWindow {
         }
     }
 
+    @Override
+    public void destory() {
+        if (mFloatLifecycle == null) return;
+        mFloatLifecycle.unRegisterReceiver(mB.mApplicationContext);
+    }
 }

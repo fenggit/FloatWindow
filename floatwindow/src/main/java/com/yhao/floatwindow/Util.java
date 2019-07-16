@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -45,6 +46,47 @@ class Util {
         }
         return sPoint.y;
     }
+
+    public static int getStatusBarHeight(Context mContext) {
+        int statusBarHeight = getStatusBarHeightByReflect(mContext);
+        if (statusBarHeight == 0) {
+            statusBarHeight = dip2px(mContext, 30);
+        }
+        return statusBarHeight;
+    }
+
+    private static int statusBarHeight = 0;
+
+    public static int getStatusBarHeightByReflect(Context mContext) {
+        //int sbHeight;
+        if (statusBarHeight > 0) {
+            return statusBarHeight;
+        }
+        try {
+            Class<?> c = Class.forName("com.android.internal.R$dimen");
+            Object obj = c.newInstance();
+            Field field = c.getField("status_bar_height");
+            int sbHeightId = Integer.parseInt(field.get(obj).toString());
+            statusBarHeight = mContext.getResources().getDimensionPixelSize(sbHeightId);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            statusBarHeight = 0;
+        }
+        return statusBarHeight;
+    }
+
+    /**
+     * dp转成px
+     *
+     * @param mContext
+     * @param dipValue
+     * @return
+     */
+    public static int dip2px(Context mContext, float dipValue) {
+        final float scale = mContext.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
+    }
+
 
     static boolean isViewVisible(View view) {
         return view.getGlobalVisibleRect(new Rect());

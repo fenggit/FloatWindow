@@ -1,8 +1,26 @@
 # FloatWindow 安卓任意界面悬浮窗
-[![](https://jitpack.io/v/yhaolpz/FloatWindow.svg)](https://jitpack.io/#yhaolpz/FloatWindow)
+
+<!--[![](https://jitpack.io/v/yhaolpz/FloatWindow.svg)](https://jitpack.io/#yhaolpz/FloatWindow)-->
 
 
 ![悬浮按钮图](https://raw.githubusercontent.com/yhaolpz/FixedFloatWindow/master/slide.gif)
+
+
+基于`FloatWindow`的 **1.0.9** 版本，由于原本的库不再维护，所有才有此项目的 
+
+> https://github.com/yhaolpz/FloatWindow
+
+在Floatwindow项目上面，修改，更新日志：
+
+1. 修复 Android O 以上的系统没有显示悬浮窗
+
+2. 销毁的时候，关闭广播`registerActivityLifecycleCallbacks`
+
+3. 升级gradle和引用库版本
+
+4. 新增悬浮窗口拖动的范围在屏幕内
+
+---
 
 特性：
 ===
