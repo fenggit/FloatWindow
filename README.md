@@ -1,12 +1,6 @@
 # FloatWindow 安卓任意界面悬浮窗
 
-<!--[![](https://jitpack.io/v/yhaolpz/FloatWindow.svg)](https://jitpack.io/#yhaolpz/FloatWindow)-->
-
-
 ![效果演示](/float_window.gif)
-![效果演示](float_window.gif)
-![效果演示](https://github.com/fenggit/FloatWindow/blob/master/float_window.gif)
-
 
 特性：
 ===
@@ -67,7 +61,7 @@
 ```
 
 
-**2.指定界面显示**
+**2.TODO 指定界面显示**
 
 ```java
               .setFilter(true, A_Activity.class, C_Activity.class)
