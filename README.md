@@ -4,6 +4,8 @@
 
 
 ![效果演示](/float_window.gif)
+![效果演示](float_window.gif)
+![效果演示](https://github.com/fenggit/FloatWindow/blob/master/float_window.gif)
 
 
 特性：
