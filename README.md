@@ -3,11 +3,8 @@
 <!--[![](https://jitpack.io/v/yhaolpz/FloatWindow.svg)](https://jitpack.io/#yhaolpz/FloatWindow)-->
 
 
-![效果演示](https://raw.githubusercontent.com/yhaolpz/FixedFloatWindow/master/slide.gif)
+![效果演示](/float_window.gif)
 
-<video src="/float_window.mp4" controls="controls" width="360" height="640" autoplay="autoplay">
-Your browser does not support the video tag.
-</video>
 
 特性：
 ===
