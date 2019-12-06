@@ -29,7 +29,7 @@
 
 ```
 	dependencies {
-	        compile 'com.github.yhaolpz:FloatWindow:1.0.9'
+	        
 	}
 ```
 
