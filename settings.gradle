@@ -1,1 +1,2 @@
-include ':sample', ':floatwindow'
+include ':app', ':library'
+rootProject.name='Floatwindow'

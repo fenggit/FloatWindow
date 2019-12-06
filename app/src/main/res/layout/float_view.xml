@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/float_view_bg"
+    android:clickable="true"
+    android:gravity="center"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="5dp">
+
+    <ImageView
+        android:id="@+id/fm_float_img"
+        android:layout_width="@dimen/float_size"
+        android:layout_height="@dimen/float_size"
+        android:background="@mipmap/default_record_album"
+        android:clickable="true"
+        android:padding="2dp"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:id="@+id/fm_float_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/fm_float_play"
+            android:layout_width="@dimen/float_size"
+            android:layout_height="@dimen/float_size"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/fm_float_play" />
+
+        <ImageView
+            android:id="@+id/fm_float_next"
+            android:layout_width="@dimen/float_size"
+            android:layout_height="@dimen/float_size"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_float_next" />
+
+        <ImageView
+            android:id="@+id/fm_float_close"
+            android:layout_width="@dimen/float_size"
+            android:layout_height="@dimen/float_size"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_float_close" />
+    </LinearLayout>
+</LinearLayout>
