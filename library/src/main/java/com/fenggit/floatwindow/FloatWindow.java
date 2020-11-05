@@ -32,7 +32,6 @@ import java.lang.reflect.Method;
  * Description:
  */
 public class FloatWindow {
-
     private WindowManager.LayoutParams mLayoutParams;
     private WindowManager mWindowManager;
     private DisplayMetrics mDisplayMetrics;
@@ -103,6 +102,8 @@ public class FloatWindow {
 
     private boolean isAddView;
 
+    private boolean isDesktopWindow;
+
     private FloatListener mFloatListener;
 
     private FloatWindow(With with) {
@@ -116,6 +117,7 @@ public class FloatWindow {
         this.alpha = with.alpha;
         this.height = with.height;
         this.width = with.width;
+        this.isDesktopWindow = with.isDesktopWindow;
 
         initWindowManager();
         initLayoutParams();
@@ -156,12 +158,24 @@ public class FloatWindow {
         }
         mLayoutParams.gravity = Gravity.START | Gravity.TOP;
         mLayoutParams.format = PixelFormat.RGBA_8888;
-        //此处mLayoutParams.type不建议使用TYPE_TOAST，因为在一些版本较低的系统中会出现拖动异常的问题，虽然它不需要权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+
+
+        // 该类型不需要申请权限
+        if (isDesktopWindow) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            } else {
+                mLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            }
         } else {
-            mLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            //mLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION;
+            ///mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+            mLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            //此处mLayoutParams.type不建议使用TYPE_TOAST，因为在一些版本较低的系统中会出现拖动异常的问题，虽然它不需要权限
+            // 高版本不支持
+            //mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
         }
+
         //悬浮窗背景明暗度0~1，数值越大背景越暗，只有在flags设置了WindowManager.LayoutParams.FLAG_DIM_BEHIND 这个属性才会生效
         mLayoutParams.dimAmount = 0.0f;
         //悬浮窗透明度0~1，数值越大越不透明
@@ -190,10 +204,6 @@ public class FloatWindow {
      */
     @SuppressLint("NewApi")
     public void show() {
-//        if (!mFloatPermission.isHavePermission(mContext)) {
-//            return;
-//        }
-
         if (!isShowing()) {
             floatView.setVisibility(View.VISIBLE);
 
@@ -217,7 +227,7 @@ public class FloatWindow {
      *
      * @return true if it's showing.
      */
-    private boolean isShowing() {
+    public boolean isShowing() {
         if (floatView != null && floatView.getVisibility() == View.VISIBLE) {
             return isShowing;
         }
@@ -536,6 +546,7 @@ public class FloatWindow {
         private View contentView;
         private boolean moveAble;
         private float alpha = 1f;
+        private boolean isDesktopWindow;
 
         /**
          * View 高度
@@ -604,6 +615,11 @@ public class FloatWindow {
         public With setStartLocation(int startX, int startY) {
             this.startX = startX;
             this.startY = startY;
+            return this;
+        }
+
+        public With setDeskTopWindow(boolean isDesktopWindow) {
+            this.isDesktopWindow = isDesktopWindow;
             return this;
         }
 

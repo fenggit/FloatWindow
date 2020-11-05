@@ -17,7 +17,7 @@ class FloatManager {
     var float: FloatWindow? = null
 
     fun initView(context: Context) {
-        var view = LayoutInflater.from(context).inflate(R.layout.float_view, null)
+        val view = LayoutInflater.from(context).inflate(R.layout.float_view, null)
         val close = view!!.findViewById<View>(R.id.fm_float_close)
         val next = view.findViewById<View>(R.id.fm_float_next)
         val play = view.findViewById<ImageView>(R.id.fm_float_play)
@@ -35,10 +35,10 @@ class FloatManager {
         }
 
         float = FloatWindow.With(context, view)
-                .setAutoAlign(true)  //是否自动贴边
-                .setModality(false)
+                .setAutoAlign(true)  // 是否自动贴边
+                .setModality(false)  // 是否模态窗口（事件是否可穿透当前窗口）
                 .setMoveAble(true)   // 是否可拖动
-                .setStartLocation(0, (getScreenHeight(context) * 0.7).toInt())
+                .setStartLocation(0, (getScreenHeight(context) * 0.7).toInt()) //设置起始位置
                 .create()
     }
 
@@ -47,7 +47,7 @@ class FloatManager {
     }
 
     fun getScreenHeight(context: Context): Int {
-        var sPoint = Point()
+        val sPoint = Point()
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         wm.defaultDisplay.getSize(sPoint)
         return sPoint.y

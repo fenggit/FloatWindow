@@ -2,14 +2,24 @@
 
 ![效果演示](/float_window.gif)
 
+
+```java
+minSdkVersion 19
+targetSdkVersion 29
+```
+
 特性：
 ===
 
-1.支持拖动，提供自动贴边等动画
+1.支持桌面和App内悬浮，需要权限
 
-2.支持权限申请操作
+2.支持仅仅在App内悬浮，不需要权限
 
-3.支持桌面悬浮
+3.支持自定义悬浮窗样式
+
+4.支持拖动，提供自动贴边等动画
+
+5.支持权限申请操作
 
 
 集成：
@@ -39,9 +49,7 @@
 **0.声明权限**
 
 ```java
-
      <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
 ```
 
 
@@ -73,6 +81,13 @@
               .setFilter(false, B_Activity.class)
 ```
 
+**1.知识点**
+ - app内悬浮窗使用的是：WindowManager.LayoutParams.TYPE_APPLICATION
+ 
+ - 桌面悬浮使用的是：WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY 和 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+ 
+为什么app内悬浮窗使用的没有使用WindowManager.LayoutParams.TYPE_TOAST？
+因为高版本不支持
 
 
 
