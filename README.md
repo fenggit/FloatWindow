@@ -25,22 +25,33 @@ targetSdkVersion 29
 集成：
 ===
 
-第 1 步、在工程的 build.gradle 中添加：
+第 1 步、在工程的`build.gradle`中添加：
 
-```
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+```groovy
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
+}
 ```
-第 2 步、在应用的  build.gradle 中添加：
+Android Studio 2020.3.1 (Arctic Fox) 以後的版本需要添加至`settings.gradle`
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+```
 
-```
-	dependencies {
-	        
-	}
+第 2 步、在应用的`build.gradle`中添加：
+
+```groovy
+dependencies {
+        implementation 'com.github.fenggit:FloatWindow:-a79eaae01f-1'
+}
 ```
 
 使用：
@@ -82,26 +93,9 @@ targetSdkVersion 29
 ```
 
 **1.知识点**
- - app内悬浮窗使用的是：WindowManager.LayoutParams.TYPE_APPLICATION
+ - app内悬浮窗使用的是：`WindowManager.LayoutParams.TYPE_APPLICATION`
  
- - 桌面悬浮使用的是：WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY 和 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+ - 桌面悬浮使用的是：`WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY` 和 `WindowManager.LayoutParams.TYPE_SYSTEM_ALERT`
  
-为什么app内悬浮窗使用的没有使用WindowManager.LayoutParams.TYPE_TOAST？
+为什么app内悬浮窗使用的没有使用`WindowManager.LayoutParams.TYPE_TOAST`？
 因为高版本不支持
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
